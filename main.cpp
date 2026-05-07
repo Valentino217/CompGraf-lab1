@@ -18,15 +18,17 @@ int main(int argc, char *argv[]) {
 	SDL_Window* win = SDL_CreateWindow("ICG-UdelaR",
 		SDL_WINDOWPOS_CENTERED,
 		SDL_WINDOWPOS_CENTERED,
-		640, 480, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
+		1280, 720, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
 	SDL_GLContext context = SDL_GL_CreateContext(win);
 
 	glMatrixMode(GL_PROJECTION);
 
 	float color = 0;
 	glClearColor(color, color, color, 1);
-
-	gluPerspective(45, 640 / 480.f, 0.1, 100);
+	glLoadIdentity();
+	float aspect = 1280 / 720.f;
+	float halfSize = 32.0f; // lado 4 centrado en el origen => [-2,2]
+	glOrtho(-halfSize * aspect, halfSize * aspect, -halfSize, halfSize, -50.0, 50.0);
 	glEnable(GL_DEPTH_TEST);
 	glMatrixMode(GL_MODELVIEW);
 
@@ -63,8 +65,8 @@ int main(int argc, char *argv[]) {
 	float x, y, z;
 
 	x = 0;
-	y = 0;
-	z = 7;
+  y = 7;
+	z = 0;
 	float degrees = 0;
 
 	GLfloat luz_posicion[4] = { 0, 0, 1, 1 };
@@ -77,7 +79,7 @@ int main(int argc, char *argv[]) {
 	do{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glLoadIdentity();
-		gluLookAt(x, y, z, 0, 0, 0, 0, 1, 0);
+       gluLookAt(x, y, z, 0, 0, 0, 0, 0, -1);
 
 		//PRENDO LA LUZ (SIEMPRE DESPUES DEL gluLookAt)
 		glEnable(GL_LIGHT0); // habilita la luz 0
@@ -96,16 +98,29 @@ int main(int argc, char *argv[]) {
 		glRotatef(degrees, 0.0, 1.0, 0.0);
 
 		//DIBUJAR OBJETOS
-		//DIBUJO TRIANGULO CON COLOR
-		glBegin(GL_TRIANGLES);
-			glColor3f(1.0, 0.0, 0.0);
-			glVertex3f(1., -1., 0.);
-			glVertex3f(-1., -1., 0.);
-			glVertex3f(0., 1., 0.);
+		//DIBUJO RECTANGULO CON COLOR
+		glBegin(GL_QUADS);
+			glColor3f(0.0, 1.0, 0.0);
+            glVertex3f(-20.f, 0.f, -20.f);
+			glVertex3f(20.f, 0.f, -20.f);
+			glVertex3f(20.f, 0.f, 20.f);
+			glVertex3f(-20.f, 0.f, 20.f);
 		glEnd();
 		glPopMatrix();
 
-		//DIBUJO TRIANGULO CON TEXTURA
+		glBegin(GL_QUADS);
+		glColor3f(0.0, 0.0, 1.0);
+		glVertex3f(-10.f, 1.f, -10.f);
+		glVertex3f(10.f, 1.f, -10.f);
+		glVertex3f(10.f, -1.f, 10.f);
+		glVertex3f(-10.f, 1.f, 10.f);
+		glEnd();
+		glPopMatrix();
+
+
+
+		//
+		/*DIBUJO TRIANGULO CON TEXTURA
 		if (textOn){
 			glEnable(GL_TEXTURE_2D);
 			glBindTexture(GL_TEXTURE_2D, textura);
@@ -120,16 +135,7 @@ int main(int argc, char *argv[]) {
 			glVertex3f(2., 1., 0.);
 		glEnd();
 		glDisable(GL_TEXTURE_2D);
-
-		//DIBUJO TRIANGULO CON LUZ
-		glEnable(GL_LIGHTING);
-		glBegin(GL_TRIANGLES);
-			glNormal3f(0, 0, 1);
-			glVertex3f(-1., -1., 0.);
-			glVertex3f(-3., -1., 0.);
-			glVertex3f(-2., 1., 0.);
-		glEnd();
-		glDisable(GL_LIGHTING);
+		*/
 
 
 		//FIN DIBUJAR OBJETOS
@@ -137,13 +143,16 @@ int main(int argc, char *argv[]) {
 		//MANEJO DE EVENTOS
 		while (SDL_PollEvent(&evento)){
 			switch (evento.type) {
+            
 			case SDL_MOUSEBUTTONDOWN:
 				rotate = true;
 				cout << "ROT\n";
 				break;
+				
 			case SDL_MOUSEBUTTONUP:
 				rotate = false;
 				break;
+				
 			case SDL_QUIT:
 				fin = true;
 				break;
