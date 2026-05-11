@@ -1,4 +1,4 @@
 .vs/OpenGL-basico/v18/DocumentLayout.backup.json
 /.vs
-./Release
-./Debug
+/Debug
+/Release
