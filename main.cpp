@@ -45,6 +45,48 @@ float barraDX = largoVentana - barraLargo;
 float enemigo1DX = 200;
 float enemigo2DX = 300;
 
+//DEFINICION DE FUNCIONES
+
+void dibujarCubo(float s) {
+
+	glBegin(GL_QUADS);
+	// Cara Frontal
+	glVertex3f(-s, -s, s);
+	glVertex3f(s, -s, s);
+	glVertex3f(s, s, s);
+	glVertex3f(-s, s, s);
+
+	// Cara Trasera
+	glVertex3f(-s, -s, -s);
+	glVertex3f(-s, s, -s);
+	glVertex3f(s, s, -s);
+	glVertex3f(s, -s, -s);
+
+	// Cara Superior 
+	glVertex3f(-s, s, -s);
+	glVertex3f(-s, s, s);
+	glVertex3f(s, s, s);
+	glVertex3f(s, s, -s);
+
+	// Cara Inferior
+	glVertex3f(-s, -s, -s);
+	glVertex3f(s, -s, -s);
+	glVertex3f(s, -s, s);
+	glVertex3f(-s, -s, s);
+
+	// Cara Derecha
+	glVertex3f(s, -s, -s);
+	glVertex3f(s, s, -s);
+	glVertex3f(s, s, s);
+	glVertex3f(s, -s, s);
+
+	// Cara Izquierda
+	glVertex3f(-s, -s, -s);
+	glVertex3f(-s, -s, s);
+	glVertex3f(-s, s, s);
+	glVertex3f(-s, s, -s);
+	glEnd();
+}
 //DEFINICION DE CLASES
 class Bola {
 public :
@@ -102,16 +144,15 @@ public :
 
 class Rect {
 public :
-	float largo, alto;
+	float lado;
 	float posicionIzq, posicionSup;
 	float velocidadX, velocidadY;
 	bool activo;
 	float desplazamientoXMax;
 	float limiteIzq, limiteDer;
 
-	Rect(float l, float a, float x, float y, float vx, float vy, bool act, float dx) {
-		largo = l;
-		alto = a;
+	Rect(float l, float x, float y, float vx, float vy, bool act, float dx) {
+		lado = l;
 		posicionIzq = x;
 		posicionSup = y;
 		velocidadX = vx;
@@ -125,19 +166,17 @@ public :
 	virtual void actualizar(float dt) {} ;
 
 	void dibujar() {
-		glBegin(GL_QUADS);
-		glColor3f(1, 0, 0);
-		glVertex2f(posicionIzq, posicionSup);
-		glVertex2f(posicionIzq + largo, posicionSup);
-		glVertex2f(posicionIzq + largo, posicionSup + alto);
-		glVertex2f(posicionIzq, posicionSup + alto);
-		glEnd();
+		glPushMatrix();
+		glColor3f(1.0f, 1.0f, 1.0f);
+		glTranslatef(posicionIzq, posicionSup, 2.0f);
+		dibujarCubo(lado);
+		glPopMatrix();
 	}
 };
 
 class Enemigo : public Rect {
 public :
-	Enemigo(float l, float a, float x, float y, float vx, float vy, bool act, float dx) : Rect(l, a, x, y, vx, vy, act, dx) {};
+	Enemigo(float l, float x, float y, float vx, float vy, bool act, float dx) : Rect(l, x, y, vx, vy, act, dx) {};
 
 	void actualizar(float dt) {
 		if (activo) {
@@ -156,7 +195,7 @@ public :
 
 class Barra : public Rect {
 public :
-	Barra(float l, float a, float x, float y, float vx, float vy, bool act, float dx) : Rect(l, a, x, y, vx, vy, act, dx) {};
+	Barra(float l, float x, float y, float vx, float vy, bool act, float dx) : Rect(l, x, y, vx, vy, act, dx) {};
 
 	void actualizar(float dt) {
 		if (activo) {
@@ -174,8 +213,8 @@ public :
 };
 
 void colisionBarraBola(Bola& bola, Barra& barra) {
-	if (bola.centroX + bola.radio >= barra.posicionIzq && bola.centroX - bola.radio <= barra.posicionIzq + barra.largo) {
-		if (bola.centroY + bola.radio >= barra.posicionSup && bola.centroY - bola.radio <= barra.posicionSup + barra.alto) {
+	if (bola.centroX + bola.radio >= barra.posicionIzq && bola.centroX - bola.radio <= barra.posicionIzq + barra.lado) {
+		if (bola.centroY + bola.radio >= barra.posicionSup && bola.centroY - bola.radio <= barra.posicionSup + barra.lado) {
 			bola.velocidadY = -1 * bola.velocidadY;
 			if (barra.velocidadX * bola.velocidadX < 0) {
 				bola.velocidadX = -1 * bola.velocidadX;
@@ -188,10 +227,10 @@ void colisionBarraBola(Bola& bola, Barra& barra) {
 int main(int argc, char *argv[]) {
 
 	Bola bola(bolaCentroX, bolaCentroY, 0, 0, bolaRadio);
-	Barra barra(barraLargo, barraAlto, barraX, barraY, velocidadBarraX, velocidadBarraY, false, barraDX);
-	Enemigo enemigo1(enemigoLargo, enemigoAlto, enemigo1X, enemigo1Y, velocidadEnemigo1X, 0, true, enemigo1DX);
-	Enemigo enemigo2(enemigoLargo, enemigoAlto, enemigo2X, enemigo2Y, velocidadEnemigo2X, 0, true, enemigo2DX);
-	Enemigo enemigo3(enemigoLargo, enemigoAlto, enemigo3X, enemigo3Y, velocidadEnemigo1X, 0, true, enemigo1DX);
+	Barra barra(barraLargo, barraX, barraY, velocidadBarraX, velocidadBarraY, false, barraDX);
+	Enemigo enemigo1(enemigoLargo, enemigo1X, enemigo1Y, velocidadEnemigo1X, 0, true, enemigo1DX);
+	Enemigo enemigo2(enemigoLargo, enemigo2X, enemigo2Y, velocidadEnemigo2X, 0, true, enemigo2DX);
+	Enemigo enemigo3(enemigoLargo, enemigo3X, enemigo3Y, velocidadEnemigo1X, 0, true, enemigo1DX);
 
 	//VELOCIDADES DE OBJETOS
 	bool inicio = false;
@@ -213,14 +252,14 @@ int main(int argc, char *argv[]) {
 	SDL_GLContext context = SDL_GL_CreateContext(win);
 
 	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
 
 	float color = 0;
 	glClearColor(color, color, color, 1);
 
-	gluOrtho2D(0, 640, 480, 0);
-	
+	gluPerspective(45, 640 / 480.f, 0.1, 100);
+	glEnable(GL_DEPTH_TEST);
 	glMatrixMode(GL_MODELVIEW);
+
 	glLoadIdentity();
 
 	bool arkanoid = true;
@@ -230,7 +269,10 @@ int main(int argc, char *argv[]) {
 	float deltaTiempo = 0.0f;
 
 	while (arkanoid) {
-		
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glLoadIdentity();
+		gluLookAt(0, 0, 7, 0, 0, 0, 0, 1, 0);
+
 		while (SDL_PollEvent(&event)) {
 			if (event.type == SDL_QUIT) {
 				arkanoid = false;
