@@ -1,0 +1,8 @@
+﻿  main.cpp
+E:\FING\Compgraf\OpenGL-basico2\main.cpp(315,13): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+E:\FING\Compgraf\OpenGL-basico2\main.cpp(319,13): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+E:\FING\Compgraf\OpenGL-basico2\main.cpp(323,13): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+E:\FING\Compgraf\OpenGL-basico2\main.cpp(327,13): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+E:\FING\Compgraf\OpenGL-basico2\main.cpp(331,13): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+E:\FING\Compgraf\OpenGL-basico2\main.cpp(335,13): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+LINK : fatal error LNK1104: no se puede abrir el archivo 'E:\FING\Compgraf\OpenGL-basico2\Release\OpenGL-basico.exe'

@@ -1,0 +1,5 @@
+﻿  main.cpp
+E:\FING\Compgraf\OpenGL-basico2\main.cpp(94,17): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
+E:\FING\Compgraf\OpenGL-basico2\main.cpp(210,17): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
+E:\FING\Compgraf\OpenGL-basico2\main.cpp(210,3): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
+  OpenGL-basico.vcxproj -> E:\FING\Compgraf\OpenGL-basico2\Debug\OpenGL-basico.exe
