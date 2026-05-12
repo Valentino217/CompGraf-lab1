@@ -19,17 +19,17 @@ float enemigoLargo = 40;
 float enemigoAlto = 40;
 
 //POSICIONES
-float centroVentanaX = largoVentana / 2;
-float barraX = centroVentanaX - barraLargo / 2;
-float barraY = altoVentana - barraAlto;
+float centroVentanaX = largoVentana / 2; //320
+float barraX =  centroVentanaX; //320 - 50 = 270
+float barraY = 0 + barraAlto;
 float bolaCentroX = centroVentanaX;
-float bolaCentroY = altoVentana - barraAlto - bolaRadio;
+float bolaCentroY = barraLargo + bolaRadio;
 float enemigo1X = largoVentana / 3 - enemigoLargo / 2;
 float enemigo2X = largoVentana / 2 - enemigoLargo / 2;
 float enemigo3X = 2 * largoVentana / 3 - enemigoLargo / 2;
-float enemigo1Y = altoVentana / 3 - enemigoAlto / 2;
-float enemigo2Y = altoVentana / 2 - enemigoAlto / 2;
-float enemigo3Y = altoVentana / 3 - enemigoAlto / 2;
+float enemigo1Y = 2 * altoVentana / 3 - enemigoAlto / 2;
+float enemigo2Y = 1.75 * altoVentana / 2 - enemigoAlto / 2;
+float enemigo3Y = 2 * altoVentana / 3 - enemigoAlto / 2;
 
 //VELOCIDADES
 float velocidadBolaX = 150;
@@ -164,12 +164,13 @@ public :
 	}
 
 	virtual void actualizar(float dt) {} ;
-
+	
 	void dibujar() {
 		glPushMatrix();
 		glColor3f(1.0f, 1.0f, 1.0f);
-		glTranslatef(posicionIzq, posicionSup, 2.0f);
-		dibujarCubo(lado);
+		glTranslatef(posicionIzq, posicionSup, 0.0f);
+		// Si 'lado' es 40, el cubo será visible.
+		dibujarCubo(lado / 2);
 		glPopMatrix();
 	}
 };
@@ -256,7 +257,7 @@ int main(int argc, char *argv[]) {
 	float color = 0;
 	glClearColor(color, color, color, 1);
 
-	gluPerspective(45, 640 / 480.f, 0.1, 100);
+	gluPerspective(45, 640 / 480.f, 0.1, 1000);
 	glEnable(GL_DEPTH_TEST);
 	glMatrixMode(GL_MODELVIEW);
 
@@ -271,7 +272,7 @@ int main(int argc, char *argv[]) {
 	while (arkanoid) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glLoadIdentity();
-		gluLookAt(0, 0, 7, 0, 0, 0, 0, 1, 0);
+		gluLookAt(320, 240, 600, 320, 240, 0, 0, 1, 0);
 
 		while (SDL_PollEvent(&event)) {
 			if (event.type == SDL_QUIT) {
@@ -301,10 +302,7 @@ int main(int argc, char *argv[]) {
 				barra.activo = false ;
 			}
 		}
-
-		glClearColor(color, color, color, 1);
-		glClear(GL_COLOR_BUFFER_BIT);
-		glLoadIdentity();
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //Funcion para activar el wireframe, comentar para ver los cubos solidos
 		
 		tiempoActual = SDL_GetTicks();
 		deltaTiempo = (tiempoActual - tiempoInicial) / 1000.0f;
