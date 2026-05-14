@@ -46,6 +46,44 @@ float enemigo1DX = 200;
 float enemigo2DX = 300;
 
 //DEFINICION DE FUNCIONES
+void dibujarPrisma(float x, float y, float z) {
+	glBegin(GL_QUADS);
+	x = x / 2;
+	y = y / 2;
+	z = z / 2;
+
+	glVertex3f(-x, -y, -z);
+	glVertex3f(x, -y, -z);
+	glVertex3f(x, y, -z);
+	glVertex3f(-x, y, -z);
+
+	glVertex3f(-x, y, -z);
+	glVertex3f(x, y, -z);
+	glVertex3f(x, y, z);
+	glVertex3f(-x, y, z);
+
+	glVertex3f(x, -y, -z);
+	glVertex3f(x, y, -z);
+	glVertex3f(x, y, z);
+	glVertex3f(x, -y, z);
+
+	glVertex3f(-x, -y, z);
+	glVertex3f(x, -y, z);
+	glVertex3f(x, y, z);
+	glVertex3f(-x, y, z);
+
+	glVertex3f(-x, -y, -z);
+	glVertex3f(x, -y, -z);
+	glVertex3f(x, -y, z);
+	glVertex3f(-x, -y, z);
+
+	glVertex3f(-x, -y, -z);
+	glVertex3f(-x, y, -z);
+	glVertex3f(-x, y, z);
+	glVertex3f(-x, -y, z);
+
+	glEnd();
+}
 
 void dibujarCubo(float s) {
 
@@ -87,6 +125,7 @@ void dibujarCubo(float s) {
 	glVertex3f(-s, s, -s);
 	glEnd();
 }
+
 //DEFINICION DE CLASES
 class Bola {
 public :
@@ -175,6 +214,133 @@ public :
 	}
 };
 
+class Prisma {
+public :
+	float largoX, largoY, largoZ;
+	float centroX, centroY, centroZ;
+	float velocidadX, velocidadZ;
+	float deltaXMax, deltaZMax;
+	float xMin, xMax, zMin, zMax;
+	bool activo;
+	
+	Prisma(float lx, float ly, float lz, float cx, float cy, float cz, float vx, float vz, float dx, float dz, bool act) {
+		largoX = lx;
+		largoY = ly;
+		largoZ = lz;
+ 		centroX = cx;
+		centroY = cy;
+		centroZ = cz;
+		velocidadX = vx;
+		velocidadZ = vz;
+		deltaXMax = dx;
+		deltaZMax = dz;
+		xMin = centroX - deltaXMax / 2;
+		xMax = centroX + deltaXMax / 2;
+		zMin = centroZ - deltaZMax / 2;
+		zMax = centroZ + deltaZMax / 2;
+		activo = act;
+	}
+
+	void dibujar() {
+		if (activo) {
+			glPushMatrix();
+			glColor3f(1.0f, 1.0f, 1.0f);
+			glTranslatef(centroX, centroY, centroZ);
+			dibujarPrisma(largoX, largoY, largoZ);
+			glPopMatrix();
+		}
+	}
+};
+
+class EnemigoPrisma : public Prisma {
+public:
+	EnemigoPrisma(float lx, float ly, float lz, float cx, float cy, float cz, float vx, float vz, float dx, float dz, bool act) : Prisma(lx, ly, lz, cx, cy, cz, vx, vz, dx, dz, act) {};
+	
+	void actualizar(float dt) {
+		if (activo) {
+			centroX += velocidadX * dt;
+			centroZ += velocidadZ * dt;
+			if (centroX < xMin) {
+				centroX = xMin;
+				velocidadX *= -1;
+			}
+			else if (centroX > xMax) {
+				centroX = xMax;
+				velocidadX *= -1;
+			}
+			if (centroZ < zMin) {
+				centroZ = zMin;
+				velocidadZ *= -1;
+			}
+			else if (centroZ > zMax) {
+				centroZ = zMax;
+				velocidadZ *= -1;
+			}
+		}
+	}
+};
+
+class BarraPrisma : public Prisma {
+public:
+	BarraPrisma(float lx, float ly, float lz, float cx, float cy, float cz, float vx, float vz, float dx, float dz, bool act) : Prisma(lx, ly, lz, cx, cy, cz, vx, vz, dx, dz, act) {};
+
+	void actualizar(float dt) {
+		if (activo) {
+			centroX += velocidadX * dt;
+			centroZ += velocidadZ * dt;
+			if (centroX < xMin) {
+				centroX = xMin;
+				activo = false;
+			}
+			else if (centroX > xMax) {
+				centroX = xMax;
+				activo = false;
+			}
+			if (centroZ < zMin) {
+				centroZ = zMin;
+				activo = false;
+			}
+			else if (centroZ > zMax) {
+				centroZ = zMax;
+				activo = false;
+			}
+		}
+	}
+};
+
+class BolaPrisma : public Prisma {
+public :
+	bool reset;
+
+	BolaPrisma(float lx, float ly, float lz, float cx, float cy, float cz, float vx, float vz, float dx, float dz, bool act) : Prisma(lx, ly, lz, cx, cy, cz, vx, vz, dx, dz, act) { 
+		reset = false;  
+	};
+	
+	void actualizar(float dt) {
+		if (activo) {
+			centroX += velocidadX * dt;
+			centroZ += velocidadZ * dt;
+			if (centroX < xMin) {
+				centroX = xMin;
+				velocidadX *= -1;
+			}
+			else if (centroX > xMax) {
+				centroX = xMax;
+				velocidadX *= -1;
+			}
+			if (centroZ < zMin) {
+				centroZ = zMin;
+				velocidadZ *= -1;
+			}
+			//Si se va de rango acá adelante
+			else if (centroZ > zMax) {
+				centroZ = zMax;
+				velocidadZ = 0;
+			}
+		}
+	}
+};
+
 class Enemigo : public Rect {
 public :
 	Enemigo(float l, float x, float y, float vx, float vy, bool act, float dx) : Rect(l, x, y, vx, vy, act, dx) {};
@@ -227,6 +393,8 @@ void colisionBarraBola(Bola& bola, Barra& barra) {
 
 int main(int argc, char *argv[]) {
 
+	BolaPrisma bola2(50, 50, 50, 300, 300, 100, 100, 50, 200, 200, true);
+	EnemigoPrisma enemigo4(100, 200, 50, 200, 200, 200, 100, 100, 200, 100, true);
 	Bola bola(bolaCentroX, bolaCentroY, 0, 0, bolaRadio);
 	Barra barra(barraLargo, barraX, barraY, velocidadBarraX, velocidadBarraY, false, barraDX);
 	Enemigo enemigo1(enemigoLargo, enemigo1X, enemigo1Y, velocidadEnemigo1X, 0, true, enemigo1DX);
@@ -324,6 +492,12 @@ int main(int argc, char *argv[]) {
 
 		enemigo3.actualizar(deltaTiempo);
 		enemigo3.dibujar();
+
+		enemigo4.actualizar(deltaTiempo);
+		enemigo4.dibujar();
+
+		bola2.actualizar(deltaTiempo);
+		bola2.dibujar();
 
 		if (inicio) {
 			colisionBarraBola(bola, barra);
