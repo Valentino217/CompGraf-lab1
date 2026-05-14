@@ -1,1 +1,8 @@
-E:\FING\CompGraf-lab1\main.cpp;E:\FING\CompGraf-lab1\OpenGL-basico\Debug\main.obj
+C:\Users\Manuel\Documents\Code\C\Graf\main.cpp;C:\Users\Manuel\Documents\Code\C\Graf\OpenGL-basico\Debug\main.obj
+C:\Users\Manuel\Documents\Code\C\Graf\src\Barra.cpp;C:\Users\Manuel\Documents\Code\C\Graf\OpenGL-basico\Debug\Barra.obj
+C:\Users\Manuel\Documents\Code\C\Graf\src\Bola.cpp;C:\Users\Manuel\Documents\Code\C\Graf\OpenGL-basico\Debug\Bola.obj
+C:\Users\Manuel\Documents\Code\C\Graf\src\Colisiones.cpp;C:\Users\Manuel\Documents\Code\C\Graf\OpenGL-basico\Debug\Colisiones.obj
+C:\Users\Manuel\Documents\Code\C\Graf\src\DrawUtils.cpp;C:\Users\Manuel\Documents\Code\C\Graf\OpenGL-basico\Debug\DrawUtils.obj
+C:\Users\Manuel\Documents\Code\C\Graf\src\Enemigo.cpp;C:\Users\Manuel\Documents\Code\C\Graf\OpenGL-basico\Debug\Enemigo.obj
+C:\Users\Manuel\Documents\Code\C\Graf\src\Game.cpp;C:\Users\Manuel\Documents\Code\C\Graf\OpenGL-basico\Debug\Game.obj
+C:\Users\Manuel\Documents\Code\C\Graf\src\Rect.cpp;C:\Users\Manuel\Documents\Code\C\Graf\OpenGL-basico\Debug\Rect.obj

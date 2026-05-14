@@ -80,8 +80,25 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\main.cpp" />
+    <ClCompile Include="..\src\Barra.cpp" />
+    <ClCompile Include="..\src\Bola.cpp" />
+    <ClCompile Include="..\src\Colisiones.cpp" />
+    <ClCompile Include="..\src\DrawUtils.cpp" />
+    <ClCompile Include="..\src\Enemigo.cpp" />
+    <ClCompile Include="..\src\Game.cpp" />
+    <ClCompile Include="..\src\Rect.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
+  <ItemGroup>
+    <ClInclude Include="..\headers\Barra.h" />
+    <ClInclude Include="..\headers\Bola.h" />
+    <ClInclude Include="..\headers\Colisiones.h" />
+    <ClInclude Include="..\headers\Constantes.h" />
+    <ClInclude Include="..\headers\DrawUtils.h" />
+    <ClInclude Include="..\headers\Enemigo.h" />
+    <ClInclude Include="..\headers\Game.h" />
+    <ClInclude Include="..\headers\Rect.h" />
+  </ItemGroup>
 </Project>
