@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <conio.h>
 #include <GL/glu.h>
+#include <vector>
 
 using namespace std;
 
@@ -51,6 +52,7 @@ public :
 	float centroX, centroY;
 	float velocidadX, velocidadY;
 	float radio;
+	bool activa;
 	
 	Bola(float x, float y, float vx, float vy, float r) {
 		centroX = x;
@@ -58,6 +60,7 @@ public :
 		velocidadX = vx;
 		velocidadY = vy;
 		radio = r;
+		activa = true;
 	}
 
 	void inicio() {
@@ -80,9 +83,8 @@ public :
 			centroY = radio;
 			velocidadY = -1 * velocidadY;
 		}
-		if (centroY > altoVentana - radio) {
-			centroY = altoVentana - radio;
-			velocidadY = -1 * velocidadY;
+		if (centroY > altoVentana + radio) {
+			activa = false;
 		}
 	}
 	
@@ -189,9 +191,13 @@ int main(int argc, char *argv[]) {
 
 	Bola bola(bolaCentroX, bolaCentroY, 0, 0, bolaRadio);
 	Barra barra(barraLargo, barraAlto, barraX, barraY, velocidadBarraX, velocidadBarraY, false, barraDX);
+	std::vector<Enemigo> enemigos;
 	Enemigo enemigo1(enemigoLargo, enemigoAlto, enemigo1X, enemigo1Y, velocidadEnemigo1X, 0, true, enemigo1DX);
+	enemigos.push_back(enemigo1);
 	Enemigo enemigo2(enemigoLargo, enemigoAlto, enemigo2X, enemigo2Y, velocidadEnemigo2X, 0, true, enemigo2DX);
+	enemigos.push_back(enemigo2);
 	Enemigo enemigo3(enemigoLargo, enemigoAlto, enemigo3X, enemigo3Y, velocidadEnemigo1X, 0, true, enemigo1DX);
+	enemigos.push_back(enemigo3);
 
 	//VELOCIDADES DE OBJETOS
 	bool inicio = false;
@@ -276,15 +282,10 @@ int main(int argc, char *argv[]) {
 		bola.dibujar();
 
 		//DIBUJAR ENEMIGOS
-		enemigo1.actualizar(deltaTiempo);
-		enemigo1.dibujar();
-
-		enemigo2.actualizar(deltaTiempo);
-		enemigo2.dibujar();
-
-		enemigo3.actualizar(deltaTiempo);
-		enemigo3.dibujar();
-
+		for (Enemigo& enemigo : enemigos) {
+			enemigo.actualizar(deltaTiempo);
+			enemigo.dibujar();
+		}
 		if (inicio) {
 			colisionBarraBola(bola, barra);
 		}
