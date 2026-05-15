@@ -5,6 +5,11 @@
 #include "../headers/Bola.h"
 #include "../headers/Colisiones.h"
 #include "../headers/Enemigo.h"
+#include "../headers/DrawUtils.h"
+#include "../headers/Prisma.h"
+#include "../headers/EnemigoPrisma.h"
+#include "../headers/BarraPrisma.h"
+#include "../headers/BolaPrisma.h"
 
 #include "SDL.h"
 #include "SDL_opengl.h"
@@ -14,6 +19,8 @@
 
 int Game::Run()
 {
+	BolaPrisma bola2(50, 50, 50, 300, 300, 100, 100, 50, 200, 200, true);
+	EnemigoPrisma enemigo4(100, 200, 50, 200, 200, 200, 100, 100, 200, 100, true);
 	Bola bola(Constantes::BolaCentroX, Constantes::BolaCentroY, 0, 0, Constantes::BolaRadio);
 	Barra barra(Constantes::BarraLargo, Constantes::BarraX, Constantes::BarraY, Constantes::VelocidadBarraX, Constantes::VelocidadBarraY, false, Constantes::BarraDX);
 	Enemigo enemigo1(Constantes::EnemigoLargo, Constantes::Enemigo1X, Constantes::Enemigo1Y, Constantes::VelocidadEnemigo1X, 0, true, Constantes::Enemigo1DX);
@@ -115,6 +122,12 @@ int Game::Run()
 
 		enemigo3.actualizar(deltaTiempo);
 		enemigo3.dibujar();
+
+		enemigo4.actualizar(deltaTiempo);
+		enemigo4.dibujar();
+		
+		bola2.actualizar(deltaTiempo);
+		bola2.dibujar();
 
 		if (inicio) {
 			colisionBarraBola(bola, barra);

@@ -42,3 +42,48 @@ void dibujarCubo(float s)
 	glVertex3f(-s, s, -s);
 	glEnd();
 }
+
+void dibujarPrisma(float lx, float ly, float lz)
+{
+	float hx = lx / 2.0f;
+	float hy = ly / 2.0f;
+	float hz = lz / 2.0f;
+
+	glBegin(GL_QUADS);
+	// Cara frontal (+Z)
+	glVertex3f(-hx, -hy, hz);
+	glVertex3f(hx, -hy, hz);
+	glVertex3f(hx, hy, hz);
+	glVertex3f(-hx, hy, hz);
+
+	// Cara trasera (-Z)
+	glVertex3f(-hx, -hy, -hz);
+	glVertex3f(-hx, hy, -hz);
+	glVertex3f(hx, hy, -hz);
+	glVertex3f(hx, -hy, -hz);
+
+	// Cara superior (+Y)
+	glVertex3f(-hx, hy, -hz);
+	glVertex3f(-hx, hy, hz);
+	glVertex3f(hx, hy, hz);
+	glVertex3f(hx, hy, -hz);
+
+	// Cara inferior (-Y)
+	glVertex3f(-hx, -hy, -hz);
+	glVertex3f(hx, -hy, -hz);
+	glVertex3f(hx, -hy, hz);
+	glVertex3f(-hx, -hy, hz);
+
+	// Cara derecha (+X)
+	glVertex3f(hx, -hy, -hz);
+	glVertex3f(hx, hy, -hz);
+	glVertex3f(hx, hy, hz);
+	glVertex3f(hx, -hy, hz);
+
+	// Cara izquierda (-X)
+	glVertex3f(-hx, -hy, -hz);
+	glVertex3f(-hx, -hy, hz);
+	glVertex3f(-hx, hy, hz);
+	glVertex3f(-hx, hy, -hz);
+	glEnd();
+}

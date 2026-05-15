@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -86,7 +86,12 @@
     <ClCompile Include="..\src\DrawUtils.cpp" />
     <ClCompile Include="..\src\Enemigo.cpp" />
     <ClCompile Include="..\src\Game.cpp" />
-    <ClCompile Include="..\src\Rect.cpp" />
+    <ClCompile Include="..\src\Rect.cpp" /> 
+	<ClCompile Include="..\src\Prisma.cpp" />
+	<ClCompile Include="..\src\BolaPrisma.cpp" />
+	<ClCompile Include="..\src\EnemigoPrisma.cpp" />
+	<ClCompile Include="..\src\BarraPrisma.cpp" />
+	 
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
@@ -100,5 +105,9 @@
     <ClInclude Include="..\headers\Enemigo.h" />
     <ClInclude Include="..\headers\Game.h" />
     <ClInclude Include="..\headers\Rect.h" />
+	<ClInclude Include="..\headers\Prisma.h" />
+	<ClInclude Include="..\headers\BolaPrisma.h" />
+	<ClInclude Include="..\headers\EnemigoPrisma.h" />
+	<ClInclude Include="..\headers\BarraPrisma.h" />
   </ItemGroup>
 </Project>
