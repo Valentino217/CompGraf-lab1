@@ -10,6 +10,7 @@
 #include "../headers/EnemigoPrisma.h"
 #include "../headers/BarraPrisma.h"
 #include "../headers/BolaPrisma.h"
+#include "../headers/Camara.h"
 
 #include "SDL.h"
 #include "SDL_opengl.h"
@@ -26,8 +27,11 @@ int Game::Run()
 	Enemigo enemigo1(Constantes::EnemigoLargo, Constantes::Enemigo1X, Constantes::Enemigo1Y, Constantes::VelocidadEnemigo1X, 0, true, Constantes::Enemigo1DX);
 	Enemigo enemigo2(Constantes::EnemigoLargo, Constantes::Enemigo2X, Constantes::Enemigo2Y, Constantes::VelocidadEnemigo2X, 0, true, Constantes::Enemigo2DX);
 	Enemigo enemigo3(Constantes::EnemigoLargo, Constantes::Enemigo3X, Constantes::Enemigo3Y, Constantes::VelocidadEnemigo1X, 0, true, Constantes::Enemigo1DX);
+	Camara camara(Constantes::LargoVentana, Constantes::AltoVentana);
 
 	bool inicio = false;
+	int  mousex, mousey;
+	int modo = 0;
 
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
 		std::cerr << "No se pudo iniciar SDL: " << SDL_GetError() << std::endl;
@@ -55,11 +59,6 @@ int Game::Run()
 		return 1;
 	}
 
-	glMatrixMode(GL_PROJECTION);
-	float color = 0;
-	glClearColor(color, color, color, 1);
-	gluPerspective(45, Constantes::LargoVentana / Constantes::AltoVentana, 0.1, 1000);
-	glEnable(GL_DEPTH_TEST);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
@@ -72,13 +71,20 @@ int Game::Run()
 	while (arkanoid) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glLoadIdentity();
-		gluLookAt(320, 240, 600, 320, 240, 0, 0, 1, 0);
+		
 
 		while (SDL_PollEvent(&event)) {
 			if (event.type == SDL_QUIT) {
 				arkanoid = false;
 			}
+			if (event.type == SDL_MOUSEMOTION) {
+				SDL_GetMouseState(&mousex, &mousey);
+			}
 			if (event.type == SDL_KEYDOWN) {
+				if (event.key.keysym.sym == SDLK_v) {
+					camara.nextModo();
+					std::cout << "Cambio a modo " << camara.getModo() << std::endl;
+				}
 				if (event.key.keysym.sym == SDLK_LEFT) {
 					barra.activo = true;
 					barra.velocidadX = -1 * Constantes::VelocidadBarraX;
@@ -102,7 +108,12 @@ int Game::Run()
 				barra.activo = false;
 			}
 		}
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+		// camara::actualizar(modo, mousex, mousey, barra.posicionIzq, barra.posicionSup);
+		float barrax = barra.posicionIzq;
+		float barray = barra.posicionSup;
+		camara.actualizar(mousex, mousey, barrax, barray);
+		camara.aplicar();
 
 		tiempoActual = SDL_GetTicks();
 		deltaTiempo = (tiempoActual - tiempoInicial) / 1000.0f;
