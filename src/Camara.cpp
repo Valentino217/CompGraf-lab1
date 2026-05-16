@@ -14,9 +14,9 @@ Camara::Camara(float screenWidth, float screenHeight) {
     upX = 0.0f; upY = 1.0f; upZ = 0.0f;
     
     // Valores iniciales para 3ra persona
-    anguloHorizontal = 0.0f;
-    anguloVertical = 0.5f;
-    distanciaRadio = 250.0f;
+    anguloHorizontal = 0.0f;     // 0 = Justo detrás de la barra
+    anguloVertical = 1.107f;     // Elevación (arctan(300/150) en radianes)
+    distanciaRadio = 335.41f;    // Hipotenusa exacta de 150 y 300
     
     setModo(0); // Empezar en cenital
 }
@@ -25,9 +25,11 @@ void Camara::nextModo(){
     if (modoActual == 2) {
         modoActual = 0;
 		fov = 45.0f;
+        upX = 0.0f; upY = 1.0f; upZ = 0.0f;
     } else {
         modoActual++;
         fov = 60.0f;
+        upX = 0.0f; upY = 0.0f; upZ = 1.0f;
 	}
 }
 
@@ -46,22 +48,31 @@ int Camara::getModo() const {
 
 void Camara::actualizar(int mouseX, int mouseY, float barraX, float barraY) {
     if (modoActual == 0) {
-        // --- MODO CENITAL (Fija mirando al centro) ---
+        // --- MODO CENITAL ---
         eyeX = 320.0f; eyeY = 240.0f; eyeZ = 600.0f;
         targetX = 320.0f; targetY = 240.0f; targetZ = 0.0f;
     } 
     else if (modoActual == 1) {
-        // --- MODO TERCERA PERSONA (Sigue a la barra) ---
-        // El objetivo es la barra
-		eyeZ = 200.0f;
+        // --- MODO TERCERA PERSONA  ---
         targetX = barraX;
-        targetY = barraY +50;
+        targetY = barraY;
         targetZ = 0.0f;
 
-        float deltaX = static_cast<float>(mouseX) - 320;
-        float deltaY = static_cast<float>(mouseY) - 240;
-        eyeX = barraX - deltaX;
-        eyeY = barraY - 150.0f - deltaY;
+        // Acumular el movimiento del mouse
+        anguloHorizontal += static_cast<float>(mouseX) * 0.003f;
+        anguloVertical += static_cast<float>(mouseY) * 0.003f;
+
+        if (anguloVertical < 0.1f) anguloVertical = 0.1f;
+        if (anguloVertical > 1.5f) anguloVertical = 1.5f;
+
+        if (anguloHorizontal < -1.57f) anguloHorizontal = -1.57f;
+        if (anguloHorizontal > 1.57f)  anguloHorizontal = 1.57f;
+
+        float radioXY = distanciaRadio * cos(anguloVertical);
+
+        eyeX = targetX + radioXY * sin(anguloHorizontal);
+        eyeY = targetY - radioXY * cos(anguloHorizontal); 
+        eyeZ = targetZ + distanciaRadio * sin(anguloVertical);
     }
 }
 

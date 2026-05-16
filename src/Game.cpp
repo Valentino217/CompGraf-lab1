@@ -78,11 +78,16 @@ int Game::Run()
 				arkanoid = false;
 			}
 			if (event.type == SDL_MOUSEMOTION) {
-				SDL_GetMouseState(&mousex, &mousey);
+				mousex = event.motion.xrel;
+				mousey = event.motion.yrel;
 			}
 			if (event.type == SDL_KEYDOWN) {
 				if (event.key.keysym.sym == SDLK_v) {
 					camara.nextModo();
+					if(camara.getModo() != 0)
+						SDL_SetRelativeMouseMode(SDL_TRUE);
+					else
+						SDL_SetRelativeMouseMode(SDL_FALSE);
 					std::cout << "Cambio a modo " << camara.getModo() << std::endl;
 				}
 				if (event.key.keysym.sym == SDLK_LEFT) {
@@ -143,6 +148,9 @@ int Game::Run()
 		if (inicio) {
 			colisionBarraBola(bola, barra);
 		}
+
+		mousex = 0;
+		mousey = 0;
 
 		SDL_GL_SwapWindow(win);
 	}
