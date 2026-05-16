@@ -5,45 +5,11 @@
 #include <stdio.h>
 #include <conio.h>
 #include <GL/glu.h>
+#include <fstream>
+#include "json.hpp"
 
 using namespace std;
-
-//DECLARACION DE CONSTANTES
-//DIMENSIONES
-float largoVentana = 640;
-float altoVentana = 480;
-float barraAlto = 10;
-float barraLargo = 100;
-float bolaRadio = 10;
-float enemigoLargo = 40;
-float enemigoAlto = 40;
-
-//POSICIONES
-float centroVentanaX = largoVentana / 2; //320
-float barraX =  centroVentanaX; //320 - 50 = 270
-float barraY = 0 + barraAlto;
-float bolaCentroX = centroVentanaX;
-float bolaCentroY = barraLargo + bolaRadio;
-float enemigo1X = largoVentana / 3 - enemigoLargo / 2;
-float enemigo2X = largoVentana / 2 - enemigoLargo / 2;
-float enemigo3X = 2 * largoVentana / 3 - enemigoLargo / 2;
-float enemigo1Y = 2 * altoVentana / 3 - enemigoAlto / 2;
-float enemigo2Y = 1.75 * altoVentana / 2 - enemigoAlto / 2;
-float enemigo3Y = 2 * altoVentana / 3 - enemigoAlto / 2;
-
-//VELOCIDADES
-float velocidadBolaX = 150;
-float velocidadBolaY = 200;
-float velocidadBarraX = 400;
-float velocidadBarraY = 0;
-float velocidadEnemigo1X = 200;
-float velocidadEnemigo2X = 300;
-float velocidadBolaMinimaY = 50;
-
-//DESPLAZAMIENTOS
-float barraDX = largoVentana - barraLargo;
-float enemigo1DX = 200;
-float enemigo2DX = 300;
+using json = nlohmann::json;
 
 //DEFINICION DE FUNCIONES
 void dibujarPrisma(float x, float y, float z) {
@@ -84,6 +50,371 @@ void dibujarPrisma(float x, float y, float z) {
 
 	glEnd();
 }
+
+class Prisma {
+public :
+	float largoX, largoY, largoZ;
+	float centroX, centroY, centroZ;
+	float velocidadXMax, velocidadZMax;
+	float velocidadX, velocidadZ;
+	float deltaXMax, deltaZMax;
+	float xMin, xMax, zMin, zMax;
+	bool activo;
+	
+	Prisma(float lx, float ly, float lz, float cx, float cy, float cz, float vx, float vz, float dx, float dz, bool act) {
+		largoX = lx;
+		largoY = ly;
+		largoZ = lz;
+ 		centroX = cx;
+		centroY = cy;
+		centroZ = cz;
+		velocidadXMax = vx;
+		velocidadZMax = vz;
+		velocidadX = vx;
+		velocidadZ = vz;
+		deltaXMax = dx;
+		deltaZMax = dz;
+		xMin = centroX - deltaXMax / 2;
+		xMax = centroX + deltaXMax / 2;
+		zMin = centroZ - deltaZMax / 2;
+		zMax = centroZ + deltaZMax / 2;
+		activo = act;
+	}
+
+	void dibujar() {
+		glPushMatrix();
+		glColor3f(1.0f, 1.0f, 1.0f);
+		glTranslatef(centroX, centroY, centroZ);
+		dibujarPrisma(largoX, largoY, largoZ);
+		glPopMatrix();
+	}
+
+	bool colision(Prisma& otro) {
+		if (centroX + largoX / 2 > otro.centroX - otro.largoX / 2 &&
+			centroX - largoX / 2 < otro.centroX + otro.largoX / 2 &&
+			centroY + largoY / 2 > otro.centroY - otro.largoY / 2 &&
+			centroY - largoY / 2 > otro.centroY + otro.largoY / 2 &&
+			centroZ + largoZ / 2 > otro.centroZ - otro.largoZ / 2 &&
+			centroZ - largoZ / 2 > otro.centroZ + otro.largoZ / 2) {
+			return true;
+		}
+		return false;
+	}
+};
+
+class EnemigoPrisma : public Prisma {
+public:
+	static int cantidad;
+
+	EnemigoPrisma(float lx, float ly, float lz, float cx, float cy, float cz, float vx, float vz, float dx, float dz, bool act) : Prisma(lx, ly, lz, cx, cy, cz, vx, vz, dx, dz, act) {
+		cantidad++;
+	};
+	
+	void actualizar(float dt) {
+		if (activo) {
+			centroX += velocidadX * dt;
+			centroZ += velocidadZ * dt;
+			if (centroX < xMin) {
+				centroX = xMin;
+				velocidadX *= -1;
+			}
+			else if (centroX > xMax) {
+				centroX = xMax;
+				velocidadX *= -1;
+			}
+			if (centroZ < zMin) {
+				centroZ = zMin;
+				velocidadZ *= -1;
+			}
+			else if (centroZ > zMax) {
+				centroZ = zMax;
+				velocidadZ *= -1;
+			}
+		}
+	}
+};
+
+class BarraPrisma : public Prisma {
+public:
+	BarraPrisma(float lx, float ly, float lz, float cx, float cy, float cz, float vx, float vz, float dx, float dz, bool act) : Prisma(lx, ly, lz, cx, cy, cz, vx, vz, dx, dz, act) {};
+
+	void actualizar(float dt) {
+		if (activo) {
+			centroX += velocidadX * dt;
+			centroZ += velocidadZ * dt;
+			if (centroX < xMin) {
+				centroX = xMin;
+				activo = false;
+			}
+			else if (centroX > xMax) {
+				centroX = xMax;
+				activo = false;
+			}
+			if (centroZ < zMin) {
+				centroZ = zMin;
+				activo = false;
+			}
+			else if (centroZ > zMax) {
+				centroZ = zMax;
+				activo = false;
+			}
+		}
+	}
+};
+
+class BolaPrisma : public Prisma {
+public :
+	static bool reset;
+	static int cantidad;
+
+	BolaPrisma(float lx, float ly, float lz, float cx, float cy, float cz, float vx, float vz, float dx, float dz, bool act) : Prisma(lx, ly, lz, cx, cy, cz, vx, vz, dx, dz, act) { 
+		cantidad++;
+	};
+
+	void setLimites(float xPantalla, float zPantalla) {
+		xMin = largoX / 2;
+		xMax = xPantalla - largoX / 2;
+		zMin = -1 * largoZ / 2;
+		zMax = -1 * zPantalla + largoZ / 2;
+	}
+	
+	void actualizar(float dt) {
+		if (activo) {
+			centroX += velocidadX * dt;
+			centroZ += velocidadZ * dt;
+			if (centroX < xMin) {
+				centroX = xMin;
+				velocidadX *= -1;
+			}
+			else if (centroX > xMax) {
+				centroX = xMax;
+				velocidadX *= -1;
+			}
+			if (centroZ < zMax) {
+				std::cout << "puta";
+				centroZ = zMax;
+				velocidadZ *= -1;
+			}
+			//Si se va de rango acá adelante
+			else if (centroZ > zMin) {
+				std::cout << "madre";
+				activo = false;
+				cantidad--;
+				if (cantidad == 0) {
+					reset = true;
+				}
+			}
+		}
+	}
+};
+
+class Pantalla {
+public :
+	float largoX, largoY, largoZ;
+	float centroX, centroY, centroZ;
+
+	Pantalla(float x, float y, float z) {
+		largoX = x;
+		largoY = y;
+		largoZ = z;
+		centroX = largoX / 2.0;
+		centroY = largoY / 2.0;
+		centroZ = largoZ / 2.0;
+	}
+};
+
+//DEFINICION DE LOS VALORES INICIALES DE LOS STATIC
+int EnemigoPrisma::cantidad = 0;
+int BolaPrisma::cantidad = 0;
+bool BolaPrisma::reset = false;
+
+//DEFINICIONES PARA EL MAIN
+class GameState {
+public :
+	Pantalla* pantalla;
+	BarraPrisma* barra;
+	std::vector<BolaPrisma> bolas;
+	std::vector<EnemigoPrisma> enemigos;
+
+	void limpiar() {
+		delete barra;
+		barra = nullptr;
+
+		bolas.clear();
+		enemigos.clear();
+	}
+
+	void actualizar(float deltaTiempo) {
+		barra->actualizar(deltaTiempo);
+		barra->dibujar();
+
+		//DIBUJAR LA PELOTA
+		for (BolaPrisma& bola : bolas) {
+			bola.actualizar(deltaTiempo);
+			bola.dibujar();
+		}
+		for (EnemigoPrisma& enemigo : enemigos) {
+			enemigo.actualizar(deltaTiempo);
+			enemigo.dibujar();
+		}
+	}
+};
+
+GameState juego;
+
+json leerArchivoJson(std::string nombreArchivo) {
+	std::ifstream archivo(nombreArchivo);
+	json carga;
+	archivo >> carga;
+	return carga;
+}
+
+void cargaArchivo(std::string nombreArchivo) {
+	//LECTURA DEL ARCHIVO
+	std::ifstream archivo(nombreArchivo);
+	json carga;
+	archivo >> carga;
+
+	juego.pantalla = new Pantalla(carga["pantalla"]["largoX"], carga["pantalla"]["largoY"], carga["pantalla"]["largoZ"]);
+	juego.barra = new BarraPrisma(carga["barra"]["largoX"], carga["barra"]["largoY"], carga["barra"]["largoZ"], carga["pantalla"]["largoX"].get<float>() / 2.0, carga["barra"]["largoY"].get<float>() / 2.0, -1 * carga["barra"]["largoZ"].get<float>() / 2.0, carga["barra"]["velocidadX"], 0, carga["pantalla"]["largoX"].get<float>() - carga["barra"]["largoX"].get<float>(), 0, false);
+	for (auto& enemigo : carga["posicionesEnemigas"]) {
+		juego.enemigos.push_back(EnemigoPrisma(carga["enemigo1"]["largoX"], carga["enemigo1"]["largoY"], carga["enemigo1"]["largoZ"], enemigo["x"], carga["enemigo1"]["largoY"].get<float>(), enemigo["z"], carga["enemigo1"]["velocidadX"], carga["enemigo1"]["velocidadZ"], enemigo["deltaX"], enemigo["deltaZ"], false));
+	}
+	juego.bolas.push_back(BolaPrisma(carga["bola"]["lado"], carga["bola"]["lado"], carga["bola"]["lado"], carga["pantalla"]["largoX"].get<float>() / 2, carga["bola"]["lado"].get<float>() / 2, -1 * carga["barra"]["largoZ"].get<float>() - carga["bola"]["lado"].get<float>() / 2, carga["bola"]["velocidadX"], carga["bola"]["velocidadZ"], carga["pantalla"]["largoX"].get<float>() - carga["bola"]["lado"].get<float>(), 0, false));
+	juego.bolas[0].setLimites(carga["pantalla"]["largoX"], carga["pantalla"]["largoZ"]);
+}
+
+int main(int argc, char* argv[]) {
+	cargaArchivo("primerJSon.json");
+	
+	bool inicio = false;
+
+	std::cout << juego.enemigos[0].centroX << " " << juego.enemigos[1].centroY << " " << juego.enemigos[2].centroZ;
+
+	//INICIALIZACION
+	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+		cerr << "No se pudo iniciar SDL: " << SDL_GetError() << endl;
+		exit(1);
+	}
+
+	//CREAR VENTANA
+	SDL_Window* win = SDL_CreateWindow(
+		"ARKANOID",
+		SDL_WINDOWPOS_CENTERED,
+		SDL_WINDOWPOS_CENTERED,
+		juego.pantalla->largoX, juego.pantalla->largoY,
+		SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
+
+	SDL_GLContext context = SDL_GL_CreateContext(win);
+
+	glMatrixMode(GL_PROJECTION);
+
+	float color = 0;
+	glClearColor(color, color, color, 1);
+
+	gluPerspective(45, juego.pantalla->largoX / juego.pantalla->largoY, 0.1, juego.pantalla->largoZ * 2.5);
+	glEnable(GL_DEPTH_TEST);
+	glMatrixMode(GL_MODELVIEW);
+
+	glLoadIdentity();
+
+	bool arkanoid = true;
+	SDL_Event event;
+	Uint32 tiempoInicial = SDL_GetTicks();
+	Uint32 tiempoActual = tiempoInicial;
+	float deltaTiempo = 0.0f;
+
+	while (arkanoid) {
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glLoadIdentity();
+		gluLookAt(juego.pantalla->centroX, juego.pantalla->centroY, juego.pantalla->largoZ, juego.pantalla->centroX, juego.pantalla->centroY, 0, 0, 1, 0);
+
+		while (SDL_PollEvent(&event)) {
+			if (event.type == SDL_QUIT) {
+				arkanoid = false;
+			}
+			if (event.type == SDL_KEYDOWN) {
+				if (event.key.keysym.sym == SDLK_LEFT) {
+					juego.barra->velocidadX = juego.barra->velocidadXMax * -1;
+					juego.barra->activo = true;
+					if (!inicio) {
+						inicio = true;
+						juego.bolas[0].velocidadX *= -1;
+						juego.bolas[0].activo = true;
+						for (auto& enemigo : juego.enemigos) {
+							enemigo.activo = true;
+						}
+					}
+				}
+				if (event.key.keysym.sym == SDLK_RIGHT) {
+					juego.barra->velocidadX = juego.barra->velocidadXMax;
+					juego.barra->activo = true;
+					if (!inicio) {
+						inicio = true;
+						std::cout << juego.bolas[0].centroZ << " " << juego.bolas[0].velocidadZ << " " << juego.bolas[0].zMax << " " << juego.bolas[0].zMin << std::endl;
+						juego.bolas[0].activo = true;
+						for (auto& enemigo : juego.enemigos) {
+							enemigo.activo = true;
+						}
+					}
+				}
+			}
+			if (event.type == SDL_KEYUP) {
+				juego.barra->activo = false;
+			}
+		}
+		
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //Funcion para activar el wireframe, comentar para ver los cubos solidos
+
+		tiempoActual = SDL_GetTicks();
+		deltaTiempo = (tiempoActual - tiempoInicial) / 1000.0f;
+		tiempoInicial = tiempoActual;
+
+		juego.actualizar(deltaTiempo);
+		
+		SDL_GL_SwapWindow(win);
+	}
+
+	return 0;
+}
+
+/*
+//DECLARACION DE CONSTANTES
+//DIMENSIONES
+float largoVentana = 640;
+float altoVentana = 480;
+float barraAlto = 10;
+float barraLargo = 100;
+float bolaRadio = 10;
+float enemigoLargo = 40;
+float enemigoAlto = 40;
+
+//POSICIONES
+float centroVentanaX = largoVentana / 2; //320
+float barraX =  centroVentanaX; //320 - 50 = 270
+float barraY = 0 + barraAlto;
+float bolaCentroX = centroVentanaX;
+float bolaCentroY = barraLargo + bolaRadio;
+float enemigo1X = largoVentana / 3 - enemigoLargo / 2;
+float enemigo2X = largoVentana / 2 - enemigoLargo / 2;
+float enemigo3X = 2 * largoVentana / 3 - enemigoLargo / 2;
+float enemigo1Y = 2 * altoVentana / 3 - enemigoAlto / 2;
+float enemigo2Y = 1.75 * altoVentana / 2 - enemigoAlto / 2;
+float enemigo3Y = 2 * altoVentana / 3 - enemigoAlto / 2;
+
+//VELOCIDADES
+float velocidadBolaX = 150;
+float velocidadBolaY = 200;
+float velocidadBarraX = 400;
+float velocidadBarraY = 0;
+float velocidadEnemigo1X = 200;
+float velocidadEnemigo2X = 300;
+float velocidadBolaMinimaY = 50;
+
+//DESPLAZAMIENTOS
+float barraDX = largoVentana - barraLargo;
+float enemigo1DX = 200;
+float enemigo2DX = 300;
 
 void dibujarCubo(float s) {
 
@@ -213,136 +544,8 @@ public :
 		glPopMatrix();
 	}
 };
-
-class Prisma {
-public :
-	float largoX, largoY, largoZ;
-	float centroX, centroY, centroZ;
-	float velocidadX, velocidadZ;
-	float deltaXMax, deltaZMax;
-	float xMin, xMax, zMin, zMax;
-	bool activo;
-	
-	Prisma(float lx, float ly, float lz, float cx, float cy, float cz, float vx, float vz, float dx, float dz, bool act) {
-		largoX = lx;
-		largoY = ly;
-		largoZ = lz;
- 		centroX = cx;
-		centroY = cy;
-		centroZ = cz;
-		velocidadX = vx;
-		velocidadZ = vz;
-		deltaXMax = dx;
-		deltaZMax = dz;
-		xMin = centroX - deltaXMax / 2;
-		xMax = centroX + deltaXMax / 2;
-		zMin = centroZ - deltaZMax / 2;
-		zMax = centroZ + deltaZMax / 2;
-		activo = act;
-	}
-
-	void dibujar() {
-		if (activo) {
-			glPushMatrix();
-			glColor3f(1.0f, 1.0f, 1.0f);
-			glTranslatef(centroX, centroY, centroZ);
-			dibujarPrisma(largoX, largoY, largoZ);
-			glPopMatrix();
-		}
-	}
-};
-
-class EnemigoPrisma : public Prisma {
-public:
-	EnemigoPrisma(float lx, float ly, float lz, float cx, float cy, float cz, float vx, float vz, float dx, float dz, bool act) : Prisma(lx, ly, lz, cx, cy, cz, vx, vz, dx, dz, act) {};
-	
-	void actualizar(float dt) {
-		if (activo) {
-			centroX += velocidadX * dt;
-			centroZ += velocidadZ * dt;
-			if (centroX < xMin) {
-				centroX = xMin;
-				velocidadX *= -1;
-			}
-			else if (centroX > xMax) {
-				centroX = xMax;
-				velocidadX *= -1;
-			}
-			if (centroZ < zMin) {
-				centroZ = zMin;
-				velocidadZ *= -1;
-			}
-			else if (centroZ > zMax) {
-				centroZ = zMax;
-				velocidadZ *= -1;
-			}
-		}
-	}
-};
-
-class BarraPrisma : public Prisma {
-public:
-	BarraPrisma(float lx, float ly, float lz, float cx, float cy, float cz, float vx, float vz, float dx, float dz, bool act) : Prisma(lx, ly, lz, cx, cy, cz, vx, vz, dx, dz, act) {};
-
-	void actualizar(float dt) {
-		if (activo) {
-			centroX += velocidadX * dt;
-			centroZ += velocidadZ * dt;
-			if (centroX < xMin) {
-				centroX = xMin;
-				activo = false;
-			}
-			else if (centroX > xMax) {
-				centroX = xMax;
-				activo = false;
-			}
-			if (centroZ < zMin) {
-				centroZ = zMin;
-				activo = false;
-			}
-			else if (centroZ > zMax) {
-				centroZ = zMax;
-				activo = false;
-			}
-		}
-	}
-};
-
-class BolaPrisma : public Prisma {
-public :
-	bool reset;
-
-	BolaPrisma(float lx, float ly, float lz, float cx, float cy, float cz, float vx, float vz, float dx, float dz, bool act) : Prisma(lx, ly, lz, cx, cy, cz, vx, vz, dx, dz, act) { 
-		reset = false;  
-	};
-	
-	void actualizar(float dt) {
-		if (activo) {
-			centroX += velocidadX * dt;
-			centroZ += velocidadZ * dt;
-			if (centroX < xMin) {
-				centroX = xMin;
-				velocidadX *= -1;
-			}
-			else if (centroX > xMax) {
-				centroX = xMax;
-				velocidadX *= -1;
-			}
-			if (centroZ < zMin) {
-				centroZ = zMin;
-				velocidadZ *= -1;
-			}
-			//Si se va de rango acá adelante
-			else if (centroZ > zMax) {
-				centroZ = zMax;
-				velocidadZ = 0;
-			}
-		}
-	}
-};
-
 class Enemigo : public Rect {
-public :
+public:
 	Enemigo(float l, float x, float y, float vx, float vy, bool act, float dx) : Rect(l, x, y, vx, vy, act, dx) {};
 
 	void actualizar(float dt) {
@@ -361,7 +564,7 @@ public :
 };
 
 class Barra : public Rect {
-public :
+public:
 	Barra(float l, float x, float y, float vx, float vy, bool act, float dx) : Rect(l, x, y, vx, vy, act, dx) {};
 
 	void actualizar(float dt) {
@@ -379,18 +582,6 @@ public :
 	}
 };
 
-void colisionBarraBola(Bola& bola, Barra& barra) {
-	if (bola.centroX + bola.radio >= barra.posicionIzq && bola.centroX - bola.radio <= barra.posicionIzq + barra.lado) {
-		if (bola.centroY + bola.radio >= barra.posicionSup && bola.centroY - bola.radio <= barra.posicionSup + barra.lado) {
-			bola.velocidadY = -1 * bola.velocidadY;
-			if (barra.velocidadX * bola.velocidadX < 0) {
-				bola.velocidadX = -1 * bola.velocidadX;
-			}
-		}
-	}
-	return;
-}
-
 int main(int argc, char *argv[]) {
 
 	BolaPrisma bola2(50, 50, 50, 300, 300, 100, 100, 50, 200, 200, true);
@@ -401,7 +592,6 @@ int main(int argc, char *argv[]) {
 	Enemigo enemigo2(enemigoLargo, enemigo2X, enemigo2Y, velocidadEnemigo2X, 0, true, enemigo2DX);
 	Enemigo enemigo3(enemigoLargo, enemigo3X, enemigo3Y, velocidadEnemigo1X, 0, true, enemigo1DX);
 
-	//VELOCIDADES DE OBJETOS
 	bool inicio = false;
 
 	//INICIALIZACION
@@ -508,6 +698,8 @@ int main(int argc, char *argv[]) {
 
 	return 0;
 }
+*/
+
 
 /*
 

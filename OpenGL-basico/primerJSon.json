@@ -1,0 +1,46 @@
+{
+  "pantalla": {
+    "largoX": 640.0,
+    "largoY": 480.0,
+    "largoZ": 600.0
+  },
+  "barra": {
+    "largoX": 60.0,
+    "largoY": 20.0,
+    "largoZ": 20.0,
+    "velocidadX": 300.0
+  },
+  "bola": {
+    "lado": 10.0,
+    "velocidadX": 100.0,
+    "velocidadZ": -200.0
+  },
+  "enemigo1": {
+    "largoX": 100.0,
+    "largoY": 200.0,
+    "largoZ": 50.0,
+    "velocidadX": 150.0,
+    "velocidadZ": 0.0
+  },
+  "cantidadEnemigos": 3,
+  "posicionesEnemigas": [
+    {
+      "x": 150.0,
+      "z": -200.0,
+      "deltaX": 150.0,
+      "deltaZ": 0.0
+    },
+    {
+      "x": 450.0,
+      "z": -200.0,
+      "deltaX": 150.0,
+      "deltaZ": 0.0
+    },
+    {
+      "x": 300.0,
+      "z": -300.0,
+      "deltaX": 200.0,
+      "deltaZ": 0.0
+    }
+  ]
+}
