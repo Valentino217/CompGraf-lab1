@@ -16,9 +16,9 @@
     "velocidadZ": -200.0
   },
   "enemigo1": {
-    "largoX": 100.0,
-    "largoY": 200.0,
-    "largoZ": 50.0,
+    "largoX": 40.0,
+    "largoY": 80.0,
+    "largoZ": 20.0,
     "velocidadX": 150.0,
     "velocidadZ": 0.0
   },

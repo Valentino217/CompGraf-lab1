@@ -12,4 +12,6 @@ public:
 
 	void setLimites(float xPantalla, float zPantalla);
 	void actualizar(float dt);
+	void reboteBarra();
+	void reboteEnemigo();
 };

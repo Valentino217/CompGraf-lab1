@@ -10,6 +10,7 @@ public:
 	float deltaXMax, deltaZMax;
 	float xMin, xMax, zMin, zMax;
 	bool activo;
+	bool visible;
 
 	Prisma(float lx, float ly, float lz, float cx, float cy, float cz, float vx, float vz, float dx, float dz, bool act);
 

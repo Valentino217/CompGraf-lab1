@@ -41,5 +41,14 @@ void BolaPrisma::actualizar(float dt)
 	}
 }
 
+void BolaPrisma::reboteEnemigo() {
+	velocidadX *= -1;
+	velocidadZ *= -1;
+}
+
+void BolaPrisma::reboteBarra() {
+	velocidadZ *= -1;
+}
+
 int BolaPrisma::cantidad = 0;
 bool BolaPrisma::reset = false;

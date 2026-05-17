@@ -12,17 +12,20 @@ Prisma::Prisma(float lx, float ly, float lz, float cx, float cy, float cz, float
 	xMax = centroX + deltaXMax / 2;
 	zMin = centroZ - deltaZMax / 2;
 	zMax = centroZ + deltaZMax / 2;
+	visible = true;
 }
 
 void Prisma::actualizar(float) {}
 
 void Prisma::dibujar() const
 {
-	glPushMatrix();
-	glColor3f(1.0f, 0.0f, 0.0f);
-	glTranslatef(centroX, centroY, centroZ);
-	dibujarPrisma(largoX, largoY, largoZ);
-	glPopMatrix();
+	if (visible) {
+		glPushMatrix();
+		glColor3f(1.0f, 0.0f, 0.0f);
+		glTranslatef(centroX, centroY, centroZ);
+		dibujarPrisma(largoX, largoY, largoZ);
+		glPopMatrix();
+	}
 }
 
 bool Prisma::colision(Prisma& otro) const 

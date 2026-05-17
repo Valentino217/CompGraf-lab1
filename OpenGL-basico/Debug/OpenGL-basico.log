@@ -1,2 +1,13 @@
-﻿  Game.cpp
+﻿  BarraPrisma.cpp
+  BolaPrisma.cpp
+  EnemigoPrisma.cpp
+  Game.cpp
+  GameState.cpp
+  Prisma.cpp
+  Utils.cpp
+C:\Users\Usuario\Juan\CompGraf-lab1\src\Utils.cpp(19,246): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
+C:\Users\Usuario\Juan\CompGraf-lab1\src\Utils.cpp(19,196): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
+C:\Users\Usuario\Juan\CompGraf-lab1\src\Utils.cpp(19,151): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
+C:\Users\Usuario\Juan\CompGraf-lab1\src\Utils.cpp(21,184): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
+  Generando código...
   OpenGL-basico.vcxproj -> C:\Users\Usuario\Juan\CompGraf-lab1\Debug\OpenGL-basico.exe

@@ -1,5 +1,4 @@
 #include "../headers/Game.h"
-
 #include "../headers/Constantes.h"
 #include "../headers/Barra.h"
 #include "../headers/Bola.h"
@@ -121,7 +120,9 @@ int Game::Run()
 		tiempoActual = SDL_GetTicks();
 		deltaTiempo = (tiempoActual - tiempoInicial) / 1000.0f;
 		tiempoInicial = tiempoActual;
+
 		juego.actualizar(deltaTiempo);
+		juego.analizarColisiones();
 
 		mousex = 0;
 		mousey = 0;

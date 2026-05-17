@@ -1,4 +1,5 @@
 #include "../headers/GameState.h"
+#include <iostream>
 
 void GameState::limpiar() {
 	delete barra;
@@ -20,5 +21,22 @@ void GameState::actualizar(float deltaTiempo) {
 	for (EnemigoPrisma& enemigo : enemigos) {
 		enemigo.actualizar(deltaTiempo);
 		enemigo.dibujar();
+	}
+}
+
+void GameState::analizarColisiones() {
+	for (auto& bola : bolas) {
+		for (auto& enemigo : enemigos) {
+			if (enemigo.visible && bola.colision(enemigo)) {
+				std::cout << "enemigo";
+				enemigo.activo = false;
+				enemigo.visible = false;
+				//AGREGAR UNA EXPLOSION
+				bola.reboteEnemigo();
+			}
+		}
+		if (bola.colision(*barra)) {
+			bola.reboteBarra();
+		}
 	}
 }

@@ -15,4 +15,6 @@ public :
 	void limpiar();
 
 	void actualizar(float deltaTiempo);
+
+	void analizarColisiones();
 };
