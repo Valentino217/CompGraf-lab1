@@ -1,10 +1,2 @@
-﻿  main.cpp
-C:\Users\Usuario\Juan\CompGraf-lab1\main.cpp(220,20): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
-C:\Users\Usuario\Juan\CompGraf-lab1\main.cpp(221,20): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
-C:\Users\Usuario\Juan\CompGraf-lab1\main.cpp(222,20): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
-C:\Users\Usuario\Juan\CompGraf-lab1\main.cpp(279,246): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
-C:\Users\Usuario\Juan\CompGraf-lab1\main.cpp(279,196): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
-C:\Users\Usuario\Juan\CompGraf-lab1\main.cpp(279,151): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
-C:\Users\Usuario\Juan\CompGraf-lab1\main.cpp(305,41): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
-C:\Users\Usuario\Juan\CompGraf-lab1\main.cpp(305,17): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
+﻿  Game.cpp
   OpenGL-basico.vcxproj -> C:\Users\Usuario\Juan\CompGraf-lab1\Debug\OpenGL-basico.exe

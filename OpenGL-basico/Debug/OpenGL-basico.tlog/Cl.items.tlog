@@ -1,1 +1,16 @@
 C:\Users\Usuario\Juan\CompGraf-lab1\main.cpp;C:\Users\Usuario\Juan\CompGraf-lab1\OpenGL-basico\Debug\main.obj
+C:\Users\Usuario\Juan\CompGraf-lab1\src\Barra.cpp;C:\Users\Usuario\Juan\CompGraf-lab1\OpenGL-basico\Debug\Barra.obj
+C:\Users\Usuario\Juan\CompGraf-lab1\src\Bola.cpp;C:\Users\Usuario\Juan\CompGraf-lab1\OpenGL-basico\Debug\Bola.obj
+C:\Users\Usuario\Juan\CompGraf-lab1\src\Camara.cpp;C:\Users\Usuario\Juan\CompGraf-lab1\OpenGL-basico\Debug\Camara.obj
+C:\Users\Usuario\Juan\CompGraf-lab1\src\Colisiones.cpp;C:\Users\Usuario\Juan\CompGraf-lab1\OpenGL-basico\Debug\Colisiones.obj
+C:\Users\Usuario\Juan\CompGraf-lab1\src\DrawUtils.cpp;C:\Users\Usuario\Juan\CompGraf-lab1\OpenGL-basico\Debug\DrawUtils.obj
+C:\Users\Usuario\Juan\CompGraf-lab1\src\Enemigo.cpp;C:\Users\Usuario\Juan\CompGraf-lab1\OpenGL-basico\Debug\Enemigo.obj
+C:\Users\Usuario\Juan\CompGraf-lab1\src\Game.cpp;C:\Users\Usuario\Juan\CompGraf-lab1\OpenGL-basico\Debug\Game.obj
+C:\Users\Usuario\Juan\CompGraf-lab1\src\GameState.cpp;C:\Users\Usuario\Juan\CompGraf-lab1\OpenGL-basico\Debug\GameState.obj
+C:\Users\Usuario\Juan\CompGraf-lab1\src\Pantalla.cpp;C:\Users\Usuario\Juan\CompGraf-lab1\OpenGL-basico\Debug\Pantalla.obj
+C:\Users\Usuario\Juan\CompGraf-lab1\src\Rect.cpp;C:\Users\Usuario\Juan\CompGraf-lab1\OpenGL-basico\Debug\Rect.obj
+C:\Users\Usuario\Juan\CompGraf-lab1\src\Prisma.cpp;C:\Users\Usuario\Juan\CompGraf-lab1\OpenGL-basico\Debug\Prisma.obj
+C:\Users\Usuario\Juan\CompGraf-lab1\src\BolaPrisma.cpp;C:\Users\Usuario\Juan\CompGraf-lab1\OpenGL-basico\Debug\BolaPrisma.obj
+C:\Users\Usuario\Juan\CompGraf-lab1\src\EnemigoPrisma.cpp;C:\Users\Usuario\Juan\CompGraf-lab1\OpenGL-basico\Debug\EnemigoPrisma.obj
+C:\Users\Usuario\Juan\CompGraf-lab1\src\BarraPrisma.cpp;C:\Users\Usuario\Juan\CompGraf-lab1\OpenGL-basico\Debug\BarraPrisma.obj
+C:\Users\Usuario\Juan\CompGraf-lab1\src\Utils.cpp;C:\Users\Usuario\Juan\CompGraf-lab1\OpenGL-basico\Debug\Utils.obj

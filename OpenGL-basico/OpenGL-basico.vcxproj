@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -81,8 +81,42 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\main.cpp" />
+    <ClCompile Include="..\src\Barra.cpp" />
+    <ClCompile Include="..\src\Bola.cpp" />
+    <ClCompile Include="..\src\Camara.cpp" />
+    <ClCompile Include="..\src\Colisiones.cpp" />
+    <ClCompile Include="..\src\DrawUtils.cpp" />
+    <ClCompile Include="..\src\Enemigo.cpp" />
+    <ClCompile Include="..\src\Game.cpp" />
+    <ClCompile Include="..\src\GameState.cpp" />
+    <ClCompile Include="..\src\Pantalla.cpp" />
+    <ClCompile Include="..\src\Rect.cpp" />
+    <ClCompile Include="..\src\Prisma.cpp" />
+    <ClCompile Include="..\src\BolaPrisma.cpp" />
+    <ClCompile Include="..\src\EnemigoPrisma.cpp" />
+    <ClCompile Include="..\src\BarraPrisma.cpp" />
+    <ClCompile Include="..\src\Utils.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
+  <ItemGroup>
+    <ClInclude Include="..\headers\Barra.h" />
+    <ClInclude Include="..\headers\Bola.h" />
+    <ClInclude Include="..\headers\Camara.h" />
+    <ClInclude Include="..\headers\Colisiones.h" />
+    <ClInclude Include="..\headers\Constantes.h" />
+    <ClInclude Include="..\headers\DrawUtils.h" />
+    <ClInclude Include="..\headers\Enemigo.h" />
+    <ClInclude Include="..\headers\Game.h" />
+    <ClInclude Include="..\headers\GameState.h" />
+    <ClInclude Include="..\headers\json.hpp" />
+    <ClInclude Include="..\headers\Pantalla.h" />
+    <ClInclude Include="..\headers\Rect.h" />
+    <ClInclude Include="..\headers\Prisma.h" />
+    <ClInclude Include="..\headers\BolaPrisma.h" />
+    <ClInclude Include="..\headers\EnemigoPrisma.h" />
+    <ClInclude Include="..\headers\BarraPrisma.h" />
+    <ClInclude Include="..\headers\Utils.h" />
+  </ItemGroup>
 </Project>

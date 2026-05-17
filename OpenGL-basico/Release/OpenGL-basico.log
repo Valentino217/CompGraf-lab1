@@ -1,10 +1,6 @@
-﻿  main.cpp
-E:\FING\CompGraf-lab1\main.cpp(31,17): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
-E:\FING\CompGraf-lab1\main.cpp(136,17): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
-E:\FING\CompGraf-lab1\main.cpp(250,17): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
-E:\FING\CompGraf-lab1\main.cpp(250,3): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
+﻿  Camara.cpp
   Generando código
-  12 of 40 functions (30.0%) were compiled, the rest were copied from previous compilation.
+  4 of 55 functions ( 7.3%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     0 functions had inline decision re-evaluated but remain unchanged
   Generación de código finalizada
